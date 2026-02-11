@@ -1,0 +1,282 @@
+Extend the existing Demo / Simulation Mode to explicitly model, surface, and handle real-world edge cases found in multi-parameter BLE sensor systems.
+
+This version is for academic demonstration and must make system behavior and limitations visible and explainable, not hidden.
+
+GLOBAL DESIGN RULES (DO NOT VIOLATE)
+
+UI flow must never block due to missing data or BLE issues
+
+Each sensor parameter is treated independently
+
+Data collection ≠ chart rendering
+
+No assumption of synchronized updates
+
+Errors must be explained, not swallowed
+
+EDGE CASE IMPLEMENTATIONS (MANDATORY)
+1️⃣ Data Arrival & Timing
+A. Different Update Rates (IMPLEMENT)
+
+Simulate at least 3 parameters with different rates:
+
+Temperature → every 2s
+
+Humidity → every 5s
+
+Accelerometer → 20–50 Hz (simulated)
+
+Rules:
+
+Each parameter has its own timestamp
+
+Each chart updates independently
+
+UI must NOT wait for “all parameters”
+
+UI note (small text):
+
+“Parameters update independently. Synchronization is not assumed.”
+
+B. Burst vs Slow Data (IMPLEMENT)
+
+Accelerometer sends burst data
+
+Temperature remains slow
+
+Mitigation:
+
+Maintain sliding window per parameter (e.g. last N points)
+
+Throttle chart redraw, not data ingestion
+
+C. Missing Parameter Data (IMPLEMENT)
+
+Simulate humidity stopping after some time.
+
+Correct behavior:
+
+Mark parameter as Inactive
+
+Show “No recent data”
+
+Other parameters continue normally
+
+App must not crash or freeze
+
+2️⃣ BLE & Connectivity
+D. Partial Disconnection (IMPLEMENT)
+
+Simulate:
+
+Device “connected”
+
+One parameter stops updating
+
+Rules:
+
+Track lastUpdatedTimestamp per parameter
+
+If stale beyond threshold → mark inactive
+
+Do NOT mark entire device disconnected
+
+E. Device Disconnect Mid-Stream (IMPLEMENT)
+
+Simulate disconnect event.
+
+Behavior:
+
+Show “Disconnected”
+
+Pause incoming data
+
+Preserve collected data
+
+Allow reconnect without page refresh
+
+F. Duplicate Streams on Reconnect (IMPLEMENT SAFETY)
+
+On reconnect:
+
+Clear old subscriptions
+
+Reset listeners
+
+Ensure no duplicate data points
+
+Comment clearly explaining this bug and mitigation.
+
+3️⃣ Data Format & Parsing
+G. Unknown / Raw Data (IMPLEMENT SAFE PARSING)
+
+Simulate receiving:
+
+Raw bytes
+
+Unexpected format
+
+Rules:
+
+Use try/catch parsing
+
+If unknown → treat as raw
+
+Display numeric / hex safely
+
+Never crash chart
+
+H. Multiple Parameters in One Payload (MENTION + BASIC SUPPORT)
+
+Example payload:
+
+"26.4,58.2"
+
+
+Rules:
+
+Parser splits payload
+
+Maps to multiple parameters
+
+Each parameter gets its own timestamp
+
+Comment:
+
+“Supported in architecture; MVP uses simplified mapping.”
+
+I. Units Inconsistency (MENTION)
+
+Units defined in metadata, not per packet
+
+UI must not rely on payload for units
+
+No need to fully implement — comment clearly.
+
+4️⃣ Visualization
+J. High-Frequency Data (MENTION ONLY)
+
+Downsampling for visualization
+
+Raw data preserved for export
+
+Label in UI:
+
+“Visualization downsampled for performance.”
+
+K. Sudden Spikes / Outliers (IMPLEMENT SAFE HANDLING)
+
+Simulate occasional spike (e.g. value = 9999)
+
+Rules:
+
+Do NOT auto-filter silently
+
+Chart rescales safely
+
+Raw value preserved in CSV
+
+L. Too Many Parameters (IMPLEMENT BASIC UX)
+
+If >4 parameters:
+
+Use collapsible cards
+
+Toggle visibility per parameter
+
+5️⃣ Storage & Export
+M. Export During Live Streaming (IMPLEMENT)
+
+On CSV export:
+
+Freeze snapshot
+
+Export data up to timestamp
+
+No partial rows
+
+N. Unequal Parameter Lengths (IMPLEMENT CORRECT FORMAT)
+
+CSV format must be:
+
+timestamp,parameter,value,unit
+
+
+NOT column-aligned.
+
+This avoids synchronization assumptions.
+
+O. Long-Running Session (MENTION + BASIC LIMIT)
+
+Rolling buffer per parameter
+
+Optional “Clear Data” button
+
+Mention memory considerations in comments
+
+6️⃣ UI & Interaction
+P. Renaming Parameters (IMPLEMENT SAFELY)
+
+Internal parameter key must remain stable
+
+Display name can change
+
+Data mapping must not break
+
+Q. Manual Disconnect (IMPLEMENT)
+
+Stop subscriptions
+
+Preserve data
+
+Allow export after disconnect
+
+R. Page Refresh (MENTION)
+
+Warn user about data loss
+
+No session restore required
+
+Clearly stated MVP limitation
+
+VISUAL REQUIREMENTS (MANDATORY)
+
+Global banner when Demo Mode is active
+
+Per-parameter status:
+
+Active
+
+Inactive
+
+Stale
+
+Tooltips explaining why states occur
+
+CODE REQUIREMENTS
+
+Strong inline comments explaining:
+
+Why edge case exists
+
+Why chosen mitigation
+
+MVP vs future work
+
+Clear separation:
+
+Data ingestion
+
+State management
+
+Visualization
+
+No silent failures
+
+FINAL ACADEMIC NOTE (COMMENT IN CODE)
+
+Add a comment block:
+
+“This demo mode explicitly models real-world BLE and sensor edge cases to demonstrate system robustness and design reasoning. Some mitigations are implemented, while others are intentionally documented to preserve MVP scope.”
+
+END PROMPT

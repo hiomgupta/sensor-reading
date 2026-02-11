@@ -1,0 +1,165 @@
+Modify the existing web application to support a “Demo Mode / Simulation Mode” so that the full app flow can be demonstrated even when Web Bluetooth is blocked by browser permissions (e.g., Replit preview).
+
+Problem to Handle Explicitly
+
+When running in Replit or restricted environments, Web Bluetooth fails with:
+
+Error: Failed to execute 'requestDevice' on 'Bluetooth': Access to the feature "bluetooth" is disallowed by permissions policy.
+
+This limitation must be acknowledged, explained in-app, and bypassed for demo purposes.
+
+Required Behavior (Strict)
+
+Environment Detection
+
+Detect if Web Bluetooth is unavailable or blocked
+
+Automatically switch to Demo Mode
+
+Do NOT crash or stop navigation
+
+User Messaging
+Display a clear, academic explanation:
+
+“Web Bluetooth is restricted in this environment (e.g., Replit preview).
+In a local Chrome/Edge browser, live BLE connectivity works as expected.
+Demo Mode is enabled to showcase full application flow.”
+
+App Flow Must Still Continue
+
+Even after the BLE error, the app must proceed through all screens.
+
+Required Screens (All Must Render)
+1. Landing Page
+
+App description
+
+“Connect Sensor” button
+
+Small note: “BLE works in Chrome/Edge locally”
+
+Clicking Connect Sensor must proceed regardless of BLE availability.
+
+2. Device Discovery Screen (Simulated)
+
+Show mock BLE devices:
+
+“ESP32_TempSensor”
+
+“BLE_Lab_Node”
+
+Fake RSSI values
+
+“Simulated Device” label
+
+Selecting a device must proceed.
+
+3. Connection Status Screen
+
+Status:
+
+“Connected (Simulated)”
+
+If BLE failed:
+
+Show error explanation box
+
+Continue without blocking
+
+4. Live Data Streaming Screen (Simulated)
+
+Generate dummy sensor data every 1 second
+
+Example:
+
+Temperature: random value between 24–30°C
+
+Attach timestamps
+
+Clearly label:
+
+“Simulated Data Stream”
+
+5. Dashboard Visualization
+
+Real-time line chart (Chart.js)
+
+Numeric live value display
+
+Connection badge:
+
+“Demo Mode Active”
+
+6. Export Screen
+
+CSV export works normally
+
+CSV clearly labeled:
+
+“Demo / Simulated Data”
+
+Format:
+
+timestamp, sensor_name, value
+
+Architectural Requirement
+
+Implement a global flag:
+
+const DEMO_MODE = !navigator.bluetooth || permissionDenied;
+
+
+All BLE logic must be wrapped so UI flow never depends on BLE success.
+
+Code Requirements
+
+Separate:
+
+BLE logic
+
+Demo simulation logic
+
+UI navigation
+
+Clear comments explaining:
+
+Why demo mode exists
+
+Browser security limitations
+
+Maintain clean React component structure
+
+Visual Indicators (Mandatory)
+
+At all times in demo mode:
+
+Banner or badge: “Demo Mode”
+
+Tooltip explaining Web Bluetooth limitation
+
+Explicit Non-Goals
+
+Do NOT:
+
+Remove BLE code
+
+Hide the error
+
+Fake success silently
+
+Add authentication
+
+Add backend services
+
+This demo must teach why the limitation exists.
+
+Final Instruction
+
+This version is for professor demonstration, not final deployment.
+Design it so the professor can clearly see:
+
+Intended user journey
+
+Technical limitation
+
+Correct production behavior

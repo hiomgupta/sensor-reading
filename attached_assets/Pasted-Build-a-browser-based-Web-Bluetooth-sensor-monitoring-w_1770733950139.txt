@@ -1,0 +1,166 @@
+Build a browser-based Web Bluetooth sensor monitoring web application for academic lab use.
+
+Core Objective
+
+Create a zero-install web app that connects directly to a BLE-enabled ESP32 sensor, streams real-time data, visualizes it live, and allows one-click CSV export. The app must prioritize simplicity, reliability, and beginner usability.
+
+Mandatory Constraints (Do NOT violate)
+
+Web-only application (no mobile apps)
+
+No user authentication
+
+No paid services
+
+No advanced IoT automation
+
+No long-term analytics
+
+Chrome / Edge browser support only
+
+Focus on short academic experiment sessions
+
+Tech Stack (Strict)
+
+Frontend: React
+
+Styling: Tailwind CSS
+
+Charts: Chart.js
+
+BLE: Web Bluetooth API (navigator.bluetooth)
+
+Storage: Client-side memory only (CSV export required)
+
+Optional (clearly modular): Firebase or Supabase for cloud sync
+
+Core Features (Must Implement)
+
+Landing Page
+
+Title and short description
+
+Single prominent “Connect Sensor” button
+
+Clean academic UI
+
+BLE Device Connection
+
+Use Web Bluetooth API
+
+Scan nearby BLE devices
+
+Show device name and RSSI
+
+Connect to ESP32 sensor
+
+Subscribe to notification-based characteristic updates
+
+Live Data Streaming
+
+Receive sensor data every 1 second
+
+Parse numeric values
+
+Attach timestamps
+
+Handle disconnects gracefully
+
+Dashboard Visualization
+
+Real-time line chart (Chart.js)
+
+Numeric live sensor value display
+
+Connection status indicator
+
+Minimal, readable layout
+
+CSV Export
+
+One-click “Export CSV” button
+
+CSV format: timestamp, sensor_name, value
+
+No manual logging required
+
+Device Management
+
+Show connected device name
+
+Disconnect / reconnect option
+
+Reset session data
+
+BLE Assumptions
+
+Support ESP32-style BLE devices using:
+
+One service UUID
+
+One characteristic UUID
+
+Notification-based data updates
+
+Use placeholder UUIDs in code with clear comments for replacement.
+
+UI Principles
+
+Beginner-first
+
+No BLE jargon exposed to user
+
+Clear visual hierarchy
+
+Demo-ready for classroom projection
+
+Responsive but desktop-first
+
+Error Handling
+
+Browser compatibility check
+
+BLE permission denial handling
+
+Auto-reconnect attempt
+
+Clear error messages (human-readable)
+
+Deliverables
+
+Fully working React app in Replit
+
+Clean, commented code
+
+Dummy data fallback if sensor not connected
+
+Ready-to-demo state without external setup
+
+Explicit Non-Goals (Do NOT implement)
+
+Login systems
+
+Notifications/alerts
+
+Rule engines
+
+Mobile app wrappers
+
+Multi-protocol support (WiFi/MQTT by default)
+
+Code Quality Requirements
+
+Modular React components
+
+Clear separation of BLE logic and UI
+
+Comments explaining academic relevance
+
+No overengineering
+
+Final Instruction
+
+Optimize for clarity, reliability, and academic defensibility, not feature count.
+This project must clearly demonstrate that browser-native BLE can outperform mobile apps for academic sensor monitoring.
+
+END PROMPT
